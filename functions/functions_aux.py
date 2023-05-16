@@ -82,6 +82,7 @@ def diff(x, y):
     #Returns the listwith difference results
     return result
 # -------------------------------------------------------
+
 # Function to count null and missing values
 
 def missing_values(df):

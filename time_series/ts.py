@@ -16,6 +16,28 @@ import datetime
 import matplotlib.pyplot as plt
 #----------------------------------------------------
 
+# Decomposition of the time series
+# https://stackoverflow.com/questions/39400115/python-pandas-group-by-date-using-datetime-data
+def ts_decomposition(df, col):
+    # Convert date column to index
+    df.index = pd.to_datetime(df['date'], format='%Y-%m-%d %H:%M:%S')
+
+    # Decomposition of time series by year, month, week, day and hour on total sales
+    df['total_sales_per_year'] = df.final_sales_price.resample('Y').sum()
+    df['total_sales_per_month'] = df.final_sales_price.resample('MS').sum()
+    df['total_sales_per_week'] = df.final_sales_price.resample('W').sum()
+    df['total_sales_per_day'] = df.final_sales_price.resample('D').sum()
+    df['total_sales_per_hour'] = df.final_sales_price.resample('H').sum()
+
+    # Decomposition of the time series by year, month, week, day and hour on average sales
+    df['avg_sales_per_year'] = df.final_sales_price.resample('Y').mean()
+    df['avg_sales_per_month'] = df.final_sales_price.resample('MS').mean()
+    df['avg_sales_per_week'] = df.final_sales_price.resample('W').mean()
+    df['avg_sales_per_day'] = df.final_sales_price.resample('D').mean()
+    df['avg_sales_per_hour'] = df.final_sales_price.resample('H').mean()
+
+    return df
+
 # Function to list holidays
 def list_holidays(df):
     df['date']= pd.to_datetime(df.date)
@@ -50,7 +72,7 @@ def create_dt_attributes(df):
 
     return df
 
-# Função para testar a estacionaridade
+# Function to test stationarity
 def test_stationarity(serie):
     # Calcula estatísticas móveis
     rolmean = serie.rolling(window=12).mean()
@@ -70,10 +92,10 @@ def test_stationarity(serie):
     # Print
     print('\nResultado do Teste Dickey-Fuller:\n')
 
-    # Teste
+    # Test
     dfteste = adfuller(serie, autolag='AIC')
 
-    # Formatando a saída
+    # Formatting the output
     dfsaida = pd.Series(dfteste[0:4], index=['Estatística do Teste',
                                              'Valor-p',
                                              'Número de Lags Consideradas',
