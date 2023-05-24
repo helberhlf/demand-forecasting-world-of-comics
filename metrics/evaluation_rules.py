@@ -17,10 +17,9 @@ def regression(model,x_test,y_test):
     y_pred  = model.predict(x_test)
     print("Metrics in Test data:\n ")
     print('='*30)
-
     # Calculate the error
     print('MAE:', mean_absolute_error(y_test,y_pred))
-    print('MAPE:',mean_absolute_percentage_error(y_test,y_pred) * 100)
+    print('MAPE:',mean_absolute_percentage_error(y_test,y_pred))
     print('MSE:', mean_squared_error(y_test,y_pred))
     print('RMSE:',mean_squared_error(y_test,y_pred, squared = False))
     print('R2:',  r2_score(y_test, y_pred))

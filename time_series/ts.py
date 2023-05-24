@@ -40,6 +40,7 @@ def ts_decomposition(df, col):
 
 # Function to list holidays
 def list_holidays(df):
+
     df['date']= pd.to_datetime(df.date)
 
     min_year = df.date.min().year

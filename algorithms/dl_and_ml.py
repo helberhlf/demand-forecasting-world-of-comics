@@ -36,7 +36,7 @@ def feature_imp(features, target,param_imp,n_best_features):
     return xbg_best_features
 
 # Creating a function to make things easier selecting model parameters XGB
-def xgb_model_helper(X_train, y_train, PARAMETERS, V_PARAM_NAME=False, V_PARAM_VALUES=False, BR=10):
+def xgb_model_helper(X_train, y_train, PARAMETERS, V_PARAM_NAME=False, V_PARAM_VALUES=False, BR=10,):
     # Cria uma matrix temporária em formato de bit do conjunto de dados a ser treinados
     temp_dmatrix = xgb.DMatrix(data=X_train, label=y_train)
 
@@ -70,3 +70,29 @@ def xgb_model_helper(X_train, y_train, PARAMETERS, V_PARAM_NAME=False, V_PARAM_V
         print(pd.DataFrame(data, columns=[V_PARAM_NAME, "mae"]))
 
         return cv_results
+
+# Creating a function for Optimizing the number of reinforcement rounds (since I used xgb's DMAtrix)
+def opt_number_of_boosting_rounds(X_train, y_train,):
+    # create the DMatrix
+    temp_dmatrix = xgb.DMatrix(data=X_train, label=y_train)
+
+    # Create the parameter dictionary for each tree: params
+    params = {"objective": 'reg:linear', "max_depth": 5}
+
+    # Create lis of number of boosting rounds
+    num_rounds = [5, 10, 20, 25, 50, 100]
+
+    # Empty list to store final round rmse per XGBoost model
+    final_rmse_per_round = []
+
+    # Iterate ove num_rounds and build one model per num_boost_round parameter
+    for curr_num_rounds in num_rounds:
+        # Perform cross-validation: cv_results
+        cv_results = xgb.cv(dtrain=temp_dmatrix, params=params, nfold=5, num_boost_round=curr_num_rounds,
+                            metrics="mae", as_pandas=True, seed=123)
+        # Append final round RMSE
+        final_rmse_per_round.append(cv_results["test-mae-mean"].tail().values[-1])
+    # print the resultant Dataframe
+    num_rounds_rmses = list(zip(num_rounds, final_rmse_per_round))
+
+    return pd.DataFrame(num_rounds_rmses, columns=["num_boosting_rounds", "mae"])
