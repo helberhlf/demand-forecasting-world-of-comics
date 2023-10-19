@@ -62,18 +62,18 @@ def build_regressor(hp):
             )
         )
     # Adds a dense classification layer with sigmoid activation
-    # model.add(tf.keras.layers.Dense(1,"sigmoid"))
-    model.add(tf.keras.layers.Dense(1))  # no activation function by default
+    model.add(tf.keras.layers.Dense(1,"sigmoid"))
+    #model.add(tf.keras.layers.Dense(1))  # no activation function by default
 
     # Instantiates the hp.Choice() method to select the optimization method and method hp.Float for select interval for learning rate
     # Uniformly random sample at logarithmic magnitude
-    optimizer_name = hp.Choice("optimizer", ["adam","nadam","rmsprop"])
-    learning_rate  = hp.Float("learning_rate", min_value=1e-4, max_value=0.1, sampling="log")
+    optimizer_name = hp.Choice("optimizer", ["adam", "nadam", "rmsprop"])
+    learning_rate = hp.Float("learning_rate", min_value=1e-4, max_value=0.1, sampling="log")
 
     # Instantiates the hp.Choice() method to select the optimization method and learning rate
     if optimizer_name == "adam":
         optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-    elif optimizer_name =="nadam":
+    elif optimizer_name == "nadam":
         optimizer = tf.keras.optimizers.Nadam(learning_rate=learning_rate)
     else:
         optimizer = tf.keras.optimizers.RMSprop(learning_rate=learning_rate)
