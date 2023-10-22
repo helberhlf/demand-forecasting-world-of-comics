@@ -59,7 +59,7 @@ def bo_tuner(X_train, y_train, X_valid, y_valid,
             acq_type=acq_type,  # you can switch between different acquisition functions
             seed=42,
         ),
-        hypermodel=build_regressor,  # Function call build_model, passes the search space to the tuner
+        hypermodel=build_regressor,  # Function call build_regressor passes the search space to the tuner
         overwrite=True,
         executions_per_trial=exec_per_trial,
         directory=directory,

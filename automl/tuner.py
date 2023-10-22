@@ -67,16 +67,14 @@ def build_regressor(hp):
 
     # Instantiates the hp.Choice() method to select the optimization method and method hp.Float for select interval for learning rate
     # Uniformly random sample at logarithmic magnitude
-    optimizer_name = hp.Choice("optimizer", ["adam", "nadam", "rmsprop"])
+    optimizer_name = hp.Choice("optimizer", ["adam", "nadam"])
     learning_rate = hp.Float("learning_rate", min_value=1e-3, max_value=0.1, sampling="log")
 
     # Instantiates the hp.Choice() method to select the optimization method and learning rate
     if optimizer_name == "adam":
         optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-    elif optimizer_name == "nadam":
-        optimizer = tf.keras.optimizers.Nadam(learning_rate=learning_rate)
     else:
-        optimizer = tf.keras.optimizers.RMSprop(learning_rate=learning_rate)
+        optimizer = tf.keras.optimizers.Nadam(learning_rate=learning_rate)
 
     # Compile the model
     model.compile(optimizer=optimizer,  # Defines the search space for the optimizer
